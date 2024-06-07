@@ -25,7 +25,8 @@ var servicedatafilename string
 func prettifiedOutput(sc map[string]int, sn map[string]string, keys []string) {
 	toto := make(map[string]int, 0)
 	for _, k := range keys {
-		toto[sn[k]] = sc[k]
+		serviceref := fmt.Sprintf("%s : %s", k, sn[k])
+		toto[serviceref] = sc[k]
 	}
 	utils.PrintMapIntAsSortedTable("Service", "#Incidents", toto)
 }
