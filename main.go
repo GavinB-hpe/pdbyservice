@@ -23,11 +23,11 @@ var unknownservicelistfilename string
 var servicedatafilename string
 
 func prettifiedOutput(sc map[string]int, sn map[string]string, keys []string) {
-	toto := make(map[string]any, 0)
+	toto := make(map[string]int, 0)
 	for _, k := range keys {
 		toto[sn[k]] = sc[k]
 	}
-	utils.PrintMapAsTable("Service", "#Incidents", toto)
+	utils.PrintMapIntAsSortedTable("Service", "#Incidents", toto)
 }
 
 func saveToFileAsJson(fn string, sn map[string]string) {
