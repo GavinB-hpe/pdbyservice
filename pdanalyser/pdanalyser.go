@@ -7,14 +7,21 @@ import (
 	"github.com/gavinB-hpe/pdbyservice/globals"
 )
 
-func PDanalyse(dbt *dbtalker.DBTalker) (map[string]int, map[string]string, []string) {
+func PDanalyse(po bool, sd *map[string]map[string]string, dbt *dbtalker.DBTalker) (map[string]int, map[string]string, []string) {
 	urgency := globals.DEFAULTURGENCYVALUES
 	status := globals.DEFAULTSTATUSVALUES
 	scount := make(map[string]int, 0)
 	snames := make(map[string]string, 0)
 	for _, pdi := range dbt.GetIncidents(urgency, status) {
-		scount[pdi.ServiceID] += 1
-		snames[pdi.ServiceID] = pdi.ServiceName
+		if po {
+			if (*sd)[pdi.ServiceID][globals.INPRODUCTION] == globals.TRUE {
+				scount[pdi.ServiceID] += 1
+				snames[pdi.ServiceID] = pdi.ServiceName
+			}
+		} else {
+			scount[pdi.ServiceID] += 1
+			snames[pdi.ServiceID] = pdi.ServiceName
+		}
 	}
 	keys := make([]string, 0)
 	for k := range scount {

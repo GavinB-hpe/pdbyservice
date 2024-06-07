@@ -28,4 +28,9 @@ const (
 	GENERATED_ASSETS_DIRECTORY   = "generatedassets"
 	DEFAULTUNKNOWNSERVICELIST    = "services-seen-but-unknown.json"
 	DEFAULTSERVICEDATAFILENAME   = "services-data.json"
+	INPRODUCTION                 = "Production"
+	TRUE                         = "true"
+	FLASE                        = "false"
+	ONPREM                       = "OnPrem"
+	SAAS                         = "SaaS"
 )
