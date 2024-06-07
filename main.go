@@ -1,33 +1,84 @@
 package main
 
 import (
+	"encoding/json"
 	"flag"
 	"fmt"
 	"log"
+	"os"
 
 	"github.com/gavinB-hpe/pdbyservice/dbtalker"
 	"github.com/gavinB-hpe/pdbyservice/globals"
 
 	"github.com/gavinB-hpe/pdbyservice/model"
 	"github.com/gavinB-hpe/pdbyservice/pdanalyser"
+	"github.com/gavinB-hpe/pdbyservice/utils"
 )
 
 // var for flags
 var dbtype string
 var dbdetails string
 var bucketsize int
+var unknownservicelistfilename string
+var servicedatafilename string
 
 func prettifiedOutput(sc map[string]int, sn map[string]string, keys []string) {
+	toto := make(map[string]any, 0)
 	for _, k := range keys {
-		fmt.Println(sn[k], " ", sc[k])
+		toto[sn[k]] = sc[k]
 	}
+	utils.PrintMapAsTable("Service", "#Incidents", toto)
+}
+
+func saveToFileAsJson(fn string, sn map[string]string) {
+	fl, err := os.Create(fn)
+	if err != nil {
+		log.Panic(err)
+	}
+	defer fl.Close()
+	encoder := json.NewEncoder(fl)
+	encoder.SetIndent("", "  ")
+	if err := encoder.Encode(sn); err != nil {
+		log.Fatalf("could not encode map to JSON: %v", err)
+	}
+}
+
+func readServiceData(fn string) *map[string]map[string]string {
+	fl, err := os.Open(fn)
+	if err != nil {
+		log.Panic(err)
+	}
+	defer fl.Close()
+	decoder := json.NewDecoder(fl)
+	var toto map[string]map[string]string
+	err = decoder.Decode(&toto)
+	if err != nil {
+		log.Panic(err)
+	}
+	return &toto
+}
+
+func checkSeenServices(sn map[string]string, sd *map[string]map[string]string) map[string]string {
+	unknown := make(map[string]string)
+	for k, v := range sn {
+		mp := (*sd)[k]
+		if mp == nil {
+			fmt.Println("WARNING : Unknown service ", k)
+			unknown[k] = v
+		}
+	}
+	return unknown
 }
 
 func main() {
 	flag.StringVar(&dbtype, "t", globals.DEFAULTDBTYPE, "Type of DB used e.g. sqlite3")
 	flag.StringVar(&dbdetails, "db", globals.DEFAULTDBDETAILS, "Filename for sqlite3 or URI of DB")
 	flag.IntVar(&bucketsize, "b", globals.DEFAULTBUCKETSIZE, "How many days to bucket together in the graph. ")
+	flag.StringVar(&unknownservicelistfilename, "o", globals.DEFAULTUNKNOWNSERVICELIST, "File used to store list of unknown services seen")
+	flag.StringVar(&servicedatafilename, "d", globals.DEFAULTSERVICEDATAFILENAME, "File with service data")
 	flag.Parse()
+
+	servicedata := readServiceData(servicedatafilename)
 	if bucketsize <= 0 {
 		log.Fatalln("Invalid bucketsize value. Must be > 0")
 	}
@@ -35,15 +86,10 @@ func main() {
 		log.Fatalln("dbdetails cannot be empty")
 	}
 	dbtalker := dbtalker.NewDBTalker(model.ConnectDatabase(dbtype, dbdetails))
-	// gd := graphdrawer.NewGraphDrawer(dbtalker, bucketsize)
-	// keys := readKeys(searchkeyfilename)
-	// go timer(timerchanservice)
-	// go timer(timerchanpolicy)
-	// go timer(timerchanstatus)
-	// go drawGraphService(&gd, keys, timerchanservice)
-	// go drawGraphPolicy(&gd, keys, timerchanpolicy)
-	// go drawGraphStatus(&gd, keys, timerchanstatus)
+	// get data
 	scounts, snames, sortedkeys := pdanalyser.PDanalyse(dbtalker)
+	// output
 	prettifiedOutput(scounts, snames, sortedkeys)
-	// webserver.ServerIt(globals.OUTPUTFILENAME, fmt.Sprintf("%s:%d", address, port), tlsmode)
+	unknown := checkSeenServices(snames, servicedata)
+	saveToFileAsJson(unknownservicelistfilename, unknown)
 }

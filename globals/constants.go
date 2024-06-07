@@ -26,4 +26,6 @@ const (
 	DEFAULTADDRESS               = "0.0.0.0"
 	DEFAULTPORT                  = 8080
 	GENERATED_ASSETS_DIRECTORY   = "generatedassets"
+	DEFAULTUNKNOWNSERVICELIST    = "services-seen-but-unknown.json"
+	DEFAULTSERVICEDATAFILENAME   = "services-data.json"
 )
