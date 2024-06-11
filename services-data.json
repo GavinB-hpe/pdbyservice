@@ -63,6 +63,8 @@
   "P9LPGWM": {"Name": "unified-api-dev", "Location": "SaaS", "Production": "false"},
   "PG13E1K": {"Name": "unified-api-intg", "Location": "SaaS", "Production": "false"},
   "P367LTB": {"Name": "neso-istio-system", "Location": "SaaS", "Production": "false"},
-  "PYFP7AM": {"Name": "CM VMaaS", "Location": "OnPrem", "Production": "true"}
+  "PYFP7AM": {"Name": "CM VMaaS", "Location": "OnPrem", "Production": "true"},
+  "PGEIPXE": {"Name": "neso-pcaas", "Location": "SaaS", "Production": "false"},
+  "PALE475": {"Name": "test-awssecurity-hub-fallthrough", "Location": "SaaS", "Production": "false"}
 
 }
