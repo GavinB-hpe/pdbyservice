@@ -29,6 +29,7 @@ const (
 	DEFAULTUNKNOWNSERVICELIST    = "services-seen-but-unknown.json"
 	DEFAULTSERVICEDATAFILENAME   = "services-data.json"
 	INPRODUCTION                 = "Production"
+	LOCATION                     = "Location"
 	TRUE                         = "true"
 	FLASE                        = "false"
 	ONPREM                       = "OnPrem"

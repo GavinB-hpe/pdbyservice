@@ -1,24 +1,56 @@
 package pdanalyser
 
 import (
+	"log"
 	"sort"
 
 	"github.com/gavinB-hpe/pdbyservice/dbtalker"
 	"github.com/gavinB-hpe/pdbyservice/globals"
 )
 
-func PDanalyse(po bool, sd *map[string]map[string]string, dbt *dbtalker.DBTalker) (map[string]int, map[string]string, []string) {
+/*
+Helper function for deciding when to include the incident.
+ProductionOnly = filters production only if set, *else all*
+SaaSOnly and OnPrem cannot both be set.
+SaaSOnly and OnPrem both unset = take all
+*/
+func yesok(po, so, onp bool, dt map[string]string) bool {
+	if so && onp {
+		log.Panic("Cannot choose both SaaS and OnPrem")
+	}
+	if !po && !so && !onp {
+		return true // if no filters set, all matches
+	}
+	pocond := dt[globals.INPRODUCTION] == globals.TRUE
+	socond := dt[globals.LOCATION] == globals.SAAS
+	onpcond := dt[globals.LOCATION] == globals.ONPREM
+	if po && pocond && !so && !onp {
+		return true
+	}
+	if po && pocond && so && socond && !onp {
+		return true
+	}
+	if po && pocond && onp && onpcond && !so {
+		return true
+	}
+	if !po && !onp && so && socond {
+		return true
+	}
+	if !po && !so && onp && onpcond {
+		return true
+	}
+	return false
+
+}
+
+func PDanalyse(po bool, so bool, onp bool, sd *map[string]map[string]string, dbt *dbtalker.DBTalker) (map[string]int, map[string]string, []string) {
 	urgency := globals.DEFAULTURGENCYVALUES
 	status := globals.DEFAULTSTATUSVALUES
 	scount := make(map[string]int, 0)
 	snames := make(map[string]string, 0)
 	for _, pdi := range dbt.GetIncidents(urgency, status) {
-		if po {
-			if (*sd)[pdi.ServiceID][globals.INPRODUCTION] == globals.TRUE {
-				scount[pdi.ServiceID] += 1
-				snames[pdi.ServiceID] = pdi.ServiceName
-			}
-		} else {
+		dt := (*sd)[pdi.ServiceID]
+		if yesok(po, so, onp, dt) {
 			scount[pdi.ServiceID] += 1
 			snames[pdi.ServiceID] = pdi.ServiceName
 		}

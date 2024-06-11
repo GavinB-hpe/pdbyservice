@@ -22,6 +22,8 @@ var bucketsize int
 var unknownservicelistfilename string
 var servicedatafilename string
 var productionOnly bool
+var saasonly bool
+var onpremonly bool
 
 func prettifiedOutput(sc map[string]int, sn map[string]string, keys []string) {
 	toto := make(map[string]int, 0)
@@ -79,6 +81,8 @@ func main() {
 	flag.StringVar(&unknownservicelistfilename, "o", globals.DEFAULTUNKNOWNSERVICELIST, "File used to store list of unknown services seen")
 	flag.StringVar(&servicedatafilename, "d", globals.DEFAULTSERVICEDATAFILENAME, "File with service data")
 	flag.BoolVar(&productionOnly, "P", false, "If set, only record data for production services")
+	flag.BoolVar(&saasonly, "S", false, "If set, only record data for services running on SaaS")
+	flag.BoolVar(&onpremonly, "O", false, "If set, only record data for services running OnPrem")
 	flag.Parse()
 
 	servicedata := readServiceData(servicedatafilename)
@@ -90,7 +94,7 @@ func main() {
 	}
 	dbtalker := dbtalker.NewDBTalker(model.ConnectDatabase(dbtype, dbdetails))
 	// get data
-	scounts, snames, sortedkeys := pdanalyser.PDanalyse(productionOnly, servicedata, dbtalker)
+	scounts, snames, sortedkeys := pdanalyser.PDanalyse(productionOnly, saasonly, onpremonly, servicedata, dbtalker)
 	// output
 	prettifiedOutput(scounts, snames, sortedkeys)
 	unknown := checkSeenServices(snames, servicedata)
