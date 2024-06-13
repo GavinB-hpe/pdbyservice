@@ -76,6 +76,7 @@
   "P0C22YP": {"Name": "unified-api-production", "Location": "SaaS", "Production": "true"},
   "PLSNQ3C": {"Name": "despina-fallthrough", "Location": "SaaS", "Production": "false"},
   "PZDC9BW": {"Name": "HPCaaS PROD manual escalation", "Location": "OnPrem", "Production": "true"},
-  "P341KVM": {"Name": "GL ControlPlane OnPrem Services (Non-Production)", "Location": "OnPrem", "Production": "false"}
+  "P341KVM": {"Name": "GL ControlPlane OnPrem Services (Non-Production)", "Location": "OnPrem", "Production": "false"},
+  "PZ3BT8R": {"Name": "neso-scim-proxy-services", "Location": "SaaS", "Production": "false"}
 
 }
