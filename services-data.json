@@ -65,6 +65,17 @@
   "P367LTB": {"Name": "neso-istio-system", "Location": "SaaS", "Production": "false"},
   "PYFP7AM": {"Name": "CM VMaaS", "Location": "OnPrem", "Production": "true"},
   "PGEIPXE": {"Name": "neso-pcaas", "Location": "SaaS", "Production": "false"},
-  "PALE475": {"Name": "test-awssecurity-hub-fallthrough", "Location": "SaaS", "Production": "false"}
+  "PALE475": {"Name": "test-awssecurity-hub-fallthrough", "Location": "SaaS", "Production": "false"},
+  "PHZQ0SS": {"Name": "VMaaS-Prod-Onprem-Internals (non-business-critical)", "Location": "OnPrem", "Production": "true"},
+  "P587SGQ": {"Name": "CM-VMware PROD manual escalation", "Location": "OnPrem", "Production": "true"},
+  "PYWUGEI": {"Name": "Nebula Infrastructure (Production)", "Location": "SaaS", "Production": "true"},
+  "P6FVM61": {"Name": "neso-monitoring", "Location": "SaaS", "Production": "false"},
+  "PED0ZV0": {"Name": "VMaaS PROD manual escalation", "Location": "OnPrem", "Production": "true"},
+  "P3I9YSG": {"Name": "oberonlogz-vas", "Location": "SaaS", "Production": "true"},
+  "PWRNJIU": {"Name": "nesologz-cassini", "Location": "SaaS", "Production": "false"},
+  "P0C22YP": {"Name": "unified-api-production", "Location": "SaaS", "Production": "true"},
+  "PLSNQ3C": {"Name": "despina-fallthrough", "Location": "SaaS", "Production": "false"},
+  "PZDC9BW": {"Name": "HPCaaS PROD manual escalation", "Location": "OnPrem", "Production": "true"},
+  "P341KVM": {"Name": "GL ControlPlane OnPrem Services (Non-Production)", "Location": "OnPrem", "Production": "false"}
 
 }
