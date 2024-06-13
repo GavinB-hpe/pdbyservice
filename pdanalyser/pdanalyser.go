@@ -3,9 +3,11 @@ package pdanalyser
 import (
 	"log"
 	"sort"
+	"time"
 
 	"github.com/gavinB-hpe/pdbyservice/dbtalker"
 	"github.com/gavinB-hpe/pdbyservice/globals"
+	"github.com/gavinB-hpe/pdbyservice/model"
 )
 
 /*
@@ -43,16 +45,24 @@ func yesok(po, so, onp bool, dt map[string]string) bool {
 
 }
 
-func PDanalyse(po bool, so bool, onp bool, sd *map[string]map[string]string, dbt *dbtalker.DBTalker) (map[string]int, map[string]string, []string) {
+func dateOK(pdi model.PDInfoType, days int) bool {
+	now := time.Now()
+	then := now.AddDate(0, 0, -days)
+	return pdi.CreatedAtT.After(then)
+}
+
+func PDanalyse(po bool, so bool, onp bool, days int, sd *map[string]map[string]string, dbt *dbtalker.DBTalker) (map[string]int, map[string]string, []string) {
 	urgency := globals.DEFAULTURGENCYVALUES
 	status := globals.DEFAULTSTATUSVALUES
 	scount := make(map[string]int, 0)
 	snames := make(map[string]string, 0)
 	for _, pdi := range dbt.GetIncidents(urgency, status) {
-		dt := (*sd)[pdi.ServiceID]
-		if yesok(po, so, onp, dt) {
-			scount[pdi.ServiceID] += 1
-			snames[pdi.ServiceID] = pdi.ServiceName
+		if dateOK(pdi, days) {
+			dt := (*sd)[pdi.ServiceID]
+			if yesok(po, so, onp, dt) {
+				scount[pdi.ServiceID] += 1
+				snames[pdi.ServiceID] = pdi.ServiceName
+			}
 		}
 	}
 	keys := make([]string, 0)

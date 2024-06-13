@@ -24,6 +24,7 @@ var servicedatafilename string
 var productionOnly bool
 var saasonly bool
 var onpremonly bool
+var daysback int
 
 func prettifiedOutput(sc map[string]int, sn map[string]string, keys []string) {
 	toto := make(map[string]int, 0)
@@ -78,6 +79,7 @@ func main() {
 	flag.StringVar(&dbtype, "t", globals.DEFAULTDBTYPE, "Type of DB used e.g. sqlite3")
 	flag.StringVar(&dbdetails, "db", globals.DEFAULTDBDETAILS, "Filename for sqlite3 or URI of DB")
 	flag.IntVar(&bucketsize, "b", globals.DEFAULTBUCKETSIZE, "How many days to bucket together in the graph. ")
+	flag.IntVar(&daysback, "D", 30, "How many days back to search. Cannot go further back than the data in the DB of course.")
 	flag.StringVar(&unknownservicelistfilename, "o", globals.DEFAULTUNKNOWNSERVICELIST, "File used to store list of unknown services seen")
 	flag.StringVar(&servicedatafilename, "d", globals.DEFAULTSERVICEDATAFILENAME, "File with service data")
 	flag.BoolVar(&productionOnly, "P", false, "If set, only record data for production services")
@@ -94,7 +96,7 @@ func main() {
 	}
 	dbtalker := dbtalker.NewDBTalker(model.ConnectDatabase(dbtype, dbdetails))
 	// get data
-	scounts, snames, sortedkeys := pdanalyser.PDanalyse(productionOnly, saasonly, onpremonly, servicedata, dbtalker)
+	scounts, snames, sortedkeys := pdanalyser.PDanalyse(productionOnly, saasonly, onpremonly, daysback, servicedata, dbtalker)
 	// output
 	prettifiedOutput(scounts, snames, sortedkeys)
 	unknown := checkSeenServices(snames, servicedata)
