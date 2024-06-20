@@ -6,7 +6,10 @@ import (
 	"strings"
 )
 
-const MAXCOLSIZE = 64
+const (
+	MAXCOLSIZE = 60
+	EDGECHAR   = "|"
+)
 
 func clip(s string) string {
 	if len(s) > MAXCOLSIZE {
@@ -33,27 +36,37 @@ func Print2DArrayAsTable(headers []string, data [][]string) {
 			}
 		}
 	}
+	// clip col widths for large cols
 	for i, l := range lengths {
 		if l > MAXCOLSIZE {
 			lengths[i] = MAXCOLSIZE
 		}
 	}
+	// add extra for edges with spaces
 	for i, _ := range headers {
-		fmt.Print("+", strings.Repeat("=", lengths[i]-2), "+")
+		lengths[i] += 4 // need extra for ++ and __
+	}
+	// draw top line
+	for i, _ := range headers {
+		fmt.Print(EDGECHAR, strings.Repeat("=", lengths[i]-1), EDGECHAR)
 	}
 	fmt.Println()
+	// Header row
 	for i, _ := range headers {
-		fmt.Print("+", headers[i], strings.Repeat(" ", lengths[i]-len(headers[i])), "+")
+		fmt.Print(EDGECHAR, " ", headers[i], strings.Repeat(" ", lengths[i]-len(headers[i])-3), " ", EDGECHAR)
 	}
 	fmt.Println()
+	// draw bottom line
 	for i, _ := range headers {
-		fmt.Print("+", strings.Repeat("=", lengths[i]-2), "+")
+		fmt.Print(EDGECHAR, strings.Repeat("=", lengths[i]-1), EDGECHAR)
 	}
 	fmt.Println()
-	// REMEMBER TO CLIP DATA TO MAXCOLSIZE
+	// draw data
 	for _, line := range data {
 		for i, _ := range headers {
-			fmt.Printf("+%-*s+", lengths[i]-2, clip(line[i]))
+			fmt.Print(EDGECHAR)
+			fmt.Printf(" %-*s", lengths[i]-2, clip(line[i]))
+			fmt.Print(EDGECHAR)
 		}
 		fmt.Println()
 	}
