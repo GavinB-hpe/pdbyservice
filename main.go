@@ -25,6 +25,7 @@ var productionOnly bool
 var saasonly bool
 var onpremonly bool
 var daysback int
+var showincidents bool
 
 func prettifiedOutput(sc map[string]int, sn map[string]string, keys []string) {
 	toto := make(map[string]int, 0)
@@ -75,6 +76,28 @@ func checkSeenServices(sn map[string]string, sd *map[string]map[string]string) m
 	return unknown
 }
 
+func printIncidents(keys []string, dbt *dbtalker.DBTalker) {
+	headers := []string{"ID", "Summary", "CreatedAt", "Priority", "Urgency", "Status", "ServiceName"}
+	for _, k := range keys {
+		block := make([][]string, 0)
+		// fmt.Println("-----------------------------------------------------------------")
+		// fmt.Println(k, "  ==>  ")
+		var incidents []model.PDInfoType
+		dbt.DB.Model(model.PDInfoType{}).Where("service_id = ?", k).Find(&incidents)
+		for _, i := range incidents {
+			block = append(block, []string{i.ID, i.Summary, i.CreatedAt, i.Priority, i.Urgency, i.Status, i.ServiceName})
+		}
+		utils.Print2DArrayAsTable(headers, block)
+		/*
+			for _, i := range incidents {
+				fmt.Println(i.ToString())
+			}
+			fmt.Println("=================================================================")
+		*/
+
+	}
+}
+
 func main() {
 	flag.StringVar(&dbtype, "t", globals.DEFAULTDBTYPE, "Type of DB used e.g. sqlite3")
 	flag.StringVar(&dbdetails, "db", globals.DEFAULTDBDETAILS, "Filename for sqlite3 or URI of DB")
@@ -85,6 +108,7 @@ func main() {
 	flag.BoolVar(&productionOnly, "P", false, "If set, only record data for production services")
 	flag.BoolVar(&saasonly, "S", false, "If set, only record data for services running on SaaS")
 	flag.BoolVar(&onpremonly, "O", false, "If set, only record data for services running OnPrem")
+	flag.BoolVar(&showincidents, "s", false, "If set, show the incident data")
 	flag.Parse()
 
 	servicedata := readServiceData(servicedatafilename)
@@ -101,4 +125,8 @@ func main() {
 	prettifiedOutput(scounts, snames, sortedkeys)
 	unknown := checkSeenServices(snames, servicedata)
 	saveToFileAsJson(unknownservicelistfilename, unknown)
+	// print out incidents
+	if showincidents {
+		printIncidents(sortedkeys, dbtalker)
+	}
 }

@@ -2,9 +2,52 @@ package utils
 
 import (
 	"fmt"
+	"log"
 	"sort"
 	"strings"
 )
+
+const MAXCOLSIZE = 64
+
+func Print2DArrayAsTable(headers []string, data [][]string) {
+	// if headers not specified, use first line of data
+	if headers == nil || len(headers) < 1 {
+		headers = data[0]
+		data = data[1:]
+	}
+	// get the column widths
+	lengths := make([]int, len(headers))
+	for i, h := range headers {
+		lengths[i] = len(h)
+	}
+	for _, line := range data {
+		for i, _ := range headers {
+			if len(line[i]) > lengths[i] {
+				lengths[i] = len(line[i])
+			}
+		}
+	}
+	for i, l := range lengths {
+		if l > MAXCOLSIZE {
+			lengths[i] = MAXCOLSIZE
+		}
+	}
+	log.Println(headers, lengths)
+	for i, _ := range headers {
+		fmt.Print("+", strings.Repeat("=", lengths[i]-2), "+")
+	}
+	fmt.Println()
+	for i, _ := range headers {
+		fmt.Print("+", headers[i], strings.Repeat(" ", lengths[i]-len(headers[i])), "+")
+	}
+	fmt.Println()
+	for i, _ := range headers {
+		fmt.Print("+", strings.Repeat("=", lengths[i]-2), "+")
+	}
+	fmt.Println()
+	// REMEMBER TO CLIP DATA TO MAXCOLSIZE
+
+}
 
 func PrintMapAsTable(hdr1 string, hdr2 string, data map[string]any) {
 	// Find the maximum key length for formatting

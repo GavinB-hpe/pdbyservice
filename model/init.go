@@ -1,6 +1,7 @@
 package model
 
 import (
+	"fmt"
 	"log"
 	"strings"
 	"time"
@@ -29,6 +30,10 @@ type PDInfoType struct {
 	Policy      string    `json:"policy" binding:"required"`
 	ServiceName string    `json:"servicename" binding:"required"`
 	ServiceID   string    `json:"serviceid" binding:"required"`
+}
+
+func (pdi *PDInfoType) ToString() string {
+	return fmt.Sprintf("ID=%s, Summary=%s, CreatedAt=%s, Priority=%s, Urgency=%s, Status=%s, ServiceName=%s", pdi.ID, pdi.Summary, pdi.CreatedAt, pdi.Priority, pdi.Urgency, pdi.Status, pdi.ServiceName)
 }
 
 var DB *gorm.DB
