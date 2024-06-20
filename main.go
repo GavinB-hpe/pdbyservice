@@ -87,15 +87,9 @@ func printIncidents(keys []string, dbt *dbtalker.DBTalker) {
 		for _, i := range incidents {
 			block = append(block, []string{i.ID, i.Summary, i.CreatedAt, i.Priority, i.Urgency, i.Status, i.ServiceName})
 		}
+		fmt.Println("Incidents for service", k, "=", incidents[0].ServiceName)
 		utils.Print2DArrayAsTable(headers, block)
-		break
-		/*
-			for _, i := range incidents {
-				fmt.Println(i.ToString())
-			}
-			fmt.Println("=================================================================")
-		*/
-
+		fmt.Println()
 	}
 }
 
