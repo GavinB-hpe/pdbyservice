@@ -26,6 +26,7 @@ var saasonly bool
 var onpremonly bool
 var daysback int
 var showincidents bool
+var skipresolved bool
 
 func prettifiedOutput(sc map[string]int, sn map[string]string, keys []string) {
 	toto := make(map[string]int, 0)
@@ -76,7 +77,7 @@ func checkSeenServices(sn map[string]string, sd *map[string]map[string]string) m
 	return unknown
 }
 
-func printIncidents(keys []string, dbt *dbtalker.DBTalker) {
+func printIncidents(sr bool, keys []string, dbt *dbtalker.DBTalker) {
 	headers := []string{"ID", "Summary", "CreatedAt", "Priority", "Urgency", "Status", "ServiceName"}
 	for _, k := range keys {
 		block := make([][]string, 0)
@@ -85,7 +86,9 @@ func printIncidents(keys []string, dbt *dbtalker.DBTalker) {
 		var incidents []model.PDInfoType
 		dbt.DB.Model(model.PDInfoType{}).Where("service_id = ?", k).Find(&incidents)
 		for _, i := range incidents {
-			block = append(block, []string{i.ID, i.Summary, i.CreatedAt, i.Priority, i.Urgency, i.Status, i.ServiceName})
+			if sr && i.Status != "resolved" || !sr {
+				block = append(block, []string{i.ID, i.Summary, i.CreatedAt, i.Priority, i.Urgency, i.Status, i.ServiceName})
+			}
 		}
 		fmt.Println("Incidents for service", k, "=", incidents[0].ServiceName)
 		utils.Print2DArrayAsTable(headers, block)
@@ -104,6 +107,7 @@ func main() {
 	flag.BoolVar(&saasonly, "S", false, "If set, only record data for services running on SaaS")
 	flag.BoolVar(&onpremonly, "O", false, "If set, only record data for services running OnPrem")
 	flag.BoolVar(&showincidents, "s", false, "If set, show the incident data")
+	flag.BoolVar(&skipresolved, "R", false, "If set, skip incidents that are resolved")
 	flag.Parse()
 
 	servicedata := readServiceData(servicedatafilename)
@@ -115,13 +119,13 @@ func main() {
 	}
 	dbtalker := dbtalker.NewDBTalker(model.ConnectDatabase(dbtype, dbdetails))
 	// get data
-	scounts, snames, sortedkeys := pdanalyser.PDanalyse(productionOnly, saasonly, onpremonly, daysback, servicedata, dbtalker)
+	scounts, snames, sortedkeys := pdanalyser.PDanalyse(productionOnly, saasonly, onpremonly, daysback, skipresolved, servicedata, dbtalker)
 	// output
 	prettifiedOutput(scounts, snames, sortedkeys)
 	unknown := checkSeenServices(snames, servicedata)
 	saveToFileAsJson(unknownservicelistfilename, unknown)
 	// print out incidents
 	if showincidents {
-		printIncidents(sortedkeys, dbtalker)
+		printIncidents(skipresolved, sortedkeys, dbtalker)
 	}
 }

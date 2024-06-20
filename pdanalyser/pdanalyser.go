@@ -51,13 +51,23 @@ func dateOK(pdi model.PDInfoType, days int) bool {
 	return pdi.CreatedAtT.After(then)
 }
 
-func PDanalyse(po bool, so bool, onp bool, days int, sd *map[string]map[string]string, dbt *dbtalker.DBTalker) (map[string]int, map[string]string, []string) {
+func statusOK(sr bool, i model.PDInfoType) bool {
+	if sr {
+		if i.Status == "resolved" {
+			log.Println("-")
+			return false
+		}
+	}
+	return true
+}
+
+func PDanalyse(po bool, so bool, onp bool, days int, skipr bool, sd *map[string]map[string]string, dbt *dbtalker.DBTalker) (map[string]int, map[string]string, []string) {
 	urgency := globals.DEFAULTURGENCYVALUES
 	status := globals.DEFAULTSTATUSVALUES
 	scount := make(map[string]int, 0)
 	snames := make(map[string]string, 0)
 	for _, pdi := range dbt.GetIncidents(urgency, status) {
-		if dateOK(pdi, days) {
+		if dateOK(pdi, days) && statusOK(skipr, pdi) {
 			dt := (*sd)[pdi.ServiceID]
 			if yesok(po, so, onp, dt) {
 				scount[pdi.ServiceID] += 1
