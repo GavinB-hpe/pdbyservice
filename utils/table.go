@@ -2,12 +2,18 @@ package utils
 
 import (
 	"fmt"
-	"log"
 	"sort"
 	"strings"
 )
 
 const MAXCOLSIZE = 64
+
+func clip(s string) string {
+	if len(s) > MAXCOLSIZE {
+		return s[:MAXCOLSIZE]
+	}
+	return s
+}
 
 func Print2DArrayAsTable(headers []string, data [][]string) {
 	// if headers not specified, use first line of data
@@ -32,7 +38,6 @@ func Print2DArrayAsTable(headers []string, data [][]string) {
 			lengths[i] = MAXCOLSIZE
 		}
 	}
-	log.Println(headers, lengths)
 	for i, _ := range headers {
 		fmt.Print("+", strings.Repeat("=", lengths[i]-2), "+")
 	}
@@ -46,6 +51,12 @@ func Print2DArrayAsTable(headers []string, data [][]string) {
 	}
 	fmt.Println()
 	// REMEMBER TO CLIP DATA TO MAXCOLSIZE
+	for _, line := range data {
+		for i, _ := range headers {
+			fmt.Printf("+%-*s+", lengths[i]-2, clip(line[i]))
+		}
+		fmt.Println()
+	}
 
 }
 
