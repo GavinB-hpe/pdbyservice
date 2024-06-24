@@ -7,18 +7,17 @@ import (
 )
 
 const (
-	MAXCOLSIZE = 60
-	EDGECHAR   = "|"
+	EDGECHAR = "|"
 )
 
-func clip(s string) string {
-	if len(s) > MAXCOLSIZE {
-		return s[:MAXCOLSIZE]
+func clip(mx int, s string) string {
+	if len(s) > mx {
+		return s[:mx]
 	}
 	return s
 }
 
-func Print2DArrayAsTable(headers []string, data [][]string) {
+func Print2DArrayAsTable(mxc int, headers []string, data [][]string) {
 	// if headers not specified, use first line of data
 	if headers == nil || len(headers) < 1 {
 		headers = data[0]
@@ -38,8 +37,8 @@ func Print2DArrayAsTable(headers []string, data [][]string) {
 	}
 	// clip col widths for large cols
 	for i, l := range lengths {
-		if l > MAXCOLSIZE {
-			lengths[i] = MAXCOLSIZE
+		if l > mxc {
+			lengths[i] = mxc
 		}
 	}
 	// add extra for edges with spaces
@@ -65,7 +64,7 @@ func Print2DArrayAsTable(headers []string, data [][]string) {
 	for _, line := range data {
 		for i, _ := range headers {
 			fmt.Print(EDGECHAR)
-			fmt.Printf(" %-*s", lengths[i]-2, clip(line[i]))
+			fmt.Printf(" %-*s", lengths[i]-2, clip(mxc, line[i]))
 			fmt.Print(EDGECHAR)
 		}
 		fmt.Println()

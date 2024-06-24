@@ -27,6 +27,7 @@ var onpremonly bool
 var daysback int
 var showincidents bool
 var skipresolved bool
+var maxcolwidth int
 
 func prettifiedOutput(sc map[string]int, sn map[string]string, keys []string) {
 	toto := make(map[string]int, 0)
@@ -91,7 +92,7 @@ func getPerServiceIncidents(sr bool, key string, dbt *dbtalker.DBTalker) [][]str
 	return block
 }
 
-func printIncidents(sr bool, keys []string, dbt *dbtalker.DBTalker) {
+func printIncidents(sr bool, keys []string, mxc int, dbt *dbtalker.DBTalker) {
 	headers := []string{"ID", "Summary", "CreatedAt", "Priority", "Urgency", "Status", "ServiceName"}
 	for _, k := range keys {
 		block := getPerServiceIncidents(sr, k, dbt)
@@ -100,7 +101,7 @@ func printIncidents(sr bool, keys []string, dbt *dbtalker.DBTalker) {
 			return
 		}
 		fmt.Println("Incidents for service", k, "=", block[0][len(headers)-1])
-		utils.Print2DArrayAsTable(headers, block)
+		utils.Print2DArrayAsTable(mxc, headers, block)
 		fmt.Println()
 	}
 }
@@ -110,6 +111,7 @@ func main() {
 	flag.StringVar(&dbdetails, "db", globals.DEFAULTDBDETAILS, "Filename for sqlite3 or URI of DB")
 	flag.IntVar(&bucketsize, "b", globals.DEFAULTBUCKETSIZE, "How many days to bucket together in the graph. ")
 	flag.IntVar(&daysback, "D", 30, "How many days back to search. Cannot go further back than the data in the DB of course.")
+	flag.IntVar(&maxcolwidth, "c", globals.MAXCOLWIDTH, "Max width of column in characters")
 	flag.StringVar(&unknownservicelistfilename, "o", globals.DEFAULTUNKNOWNSERVICELIST, "File used to store list of unknown services seen")
 	flag.StringVar(&servicedatafilename, "d", globals.DEFAULTSERVICEDATAFILENAME, "File with service data")
 	flag.BoolVar(&productionOnly, "P", false, "If set, only record data for production services")
@@ -135,6 +137,6 @@ func main() {
 	saveToFileAsJson(unknownservicelistfilename, unknown)
 	// print out incidents
 	if showincidents {
-		printIncidents(skipresolved, sortedkeys, dbtalker)
+		printIncidents(skipresolved, sortedkeys, maxcolwidth, dbtalker)
 	}
 }

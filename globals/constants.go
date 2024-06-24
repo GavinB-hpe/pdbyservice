@@ -34,4 +34,5 @@ const (
 	FLASE                        = "false"
 	ONPREM                       = "OnPrem"
 	SAAS                         = "SaaS"
+	MAXCOLWIDTH                  = 40
 )
