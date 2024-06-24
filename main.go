@@ -77,20 +77,29 @@ func checkSeenServices(sn map[string]string, sd *map[string]map[string]string) m
 	return unknown
 }
 
+func getPerServiceIncidents(sr bool, key string, dbt *dbtalker.DBTalker) [][]string {
+	block := make([][]string, 0)
+	// fmt.Println("-----------------------------------------------------------------")
+	// fmt.Println(k, "  ==>  ")
+	var incidents []model.PDInfoType
+	dbt.DB.Model(model.PDInfoType{}).Where("service_id = ?", key).Find(&incidents)
+	for _, i := range incidents {
+		if sr && i.Status != "resolved" || !sr {
+			block = append(block, []string{i.ID, i.Summary, i.CreatedAt, i.Priority, i.Urgency, i.Status, i.ServiceName})
+		}
+	}
+	return block
+}
+
 func printIncidents(sr bool, keys []string, dbt *dbtalker.DBTalker) {
 	headers := []string{"ID", "Summary", "CreatedAt", "Priority", "Urgency", "Status", "ServiceName"}
 	for _, k := range keys {
-		block := make([][]string, 0)
-		// fmt.Println("-----------------------------------------------------------------")
-		// fmt.Println(k, "  ==>  ")
-		var incidents []model.PDInfoType
-		dbt.DB.Model(model.PDInfoType{}).Where("service_id = ?", k).Find(&incidents)
-		for _, i := range incidents {
-			if sr && i.Status != "resolved" || !sr {
-				block = append(block, []string{i.ID, i.Summary, i.CreatedAt, i.Priority, i.Urgency, i.Status, i.ServiceName})
-			}
+		block := getPerServiceIncidents(sr, k, dbt)
+		if len(block) <= 0 {
+			fmt.Println("No incidents for service ", k)
+			return
 		}
-		fmt.Println("Incidents for service", k, "=", incidents[0].ServiceName)
+		fmt.Println("Incidents for service", k, "=", block[0][len(headers)-1])
 		utils.Print2DArrayAsTable(headers, block)
 		fmt.Println()
 	}
