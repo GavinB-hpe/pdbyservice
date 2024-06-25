@@ -18,18 +18,20 @@ const (
 )
 
 type PDInfoType struct {
-	ID          string    `json:"id" binding:"required"`
-	Summary     string    `json:"summary" binding:"required"`
-	Description string    `json:"description" binding:"required"`
-	CreatedAt   string    `json:"createdat" binding:"required"`
-	CreatedAtT  time.Time `json:"createdatt"`
-	HTMLURL     string    `json:"htmlurl" binding:"required"`
-	Priority    string    `json:"priority" binding:"required"`
-	Urgency     string    `json:"urgency" binding:"required"`
-	Status      string    `json:"status" binding:"required"`
-	Policy      string    `json:"policy" binding:"required"`
-	ServiceName string    `json:"servicename" binding:"required"`
-	ServiceID   string    `json:"serviceid" binding:"required"`
+	ID                  string    `json:"id" binding:"required"`
+	Summary             string    `json:"summary" binding:"required"`
+	Description         string    `json:"description" binding:"required"`
+	CreatedAt           string    `json:"createdat" binding:"required"`
+	CreatedAtT          time.Time `json:"createdatt"`
+	LastStatusChangeAt  string    `json:"laststatuschangeat" binding:"required"`
+	LastStatusChangeAtT time.Time `json:"laststatuschangeatt" binding:"required"`
+	HTMLURL             string    `json:"htmlurl" binding:"required"`
+	Priority            string    `json:"priority" binding:"required"`
+	Urgency             string    `json:"urgency" binding:"required"`
+	Status              string    `json:"status" binding:"required"`
+	Policy              string    `json:"policy" binding:"required"`
+	ServiceName         string    `json:"servicename" binding:"required"`
+	ServiceID           string    `json:"serviceid" binding:"required"`
 }
 
 func (pdi *PDInfoType) ToString() string {
