@@ -54,7 +54,6 @@ func dateOK(pdi model.PDInfoType, days int) bool {
 func statusOK(sr bool, i model.PDInfoType) bool {
 	if sr {
 		if i.Status == "resolved" {
-			log.Println("-")
 			return false
 		}
 	}
