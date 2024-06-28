@@ -32,6 +32,7 @@ type PDInfoType struct {
 	Policy              string    `json:"policy" binding:"required"`
 	ServiceName         string    `json:"servicename" binding:"required"`
 	ServiceID           string    `json:"serviceid" binding:"required"`
+	AssignedName        string    `json:assignedname"`
 }
 
 func (pdi *PDInfoType) ToString() string {

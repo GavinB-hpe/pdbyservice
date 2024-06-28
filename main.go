@@ -86,14 +86,14 @@ func getPerServiceIncidents(sr bool, key string, dbt *dbtalker.DBTalker) [][]str
 	dbt.DB.Model(model.PDInfoType{}).Where("service_id = ?", key).Find(&incidents)
 	for _, i := range incidents {
 		if sr && i.Status != "resolved" || !sr {
-			block = append(block, []string{i.ID, i.Summary, i.CreatedAt, i.LastStatusChangeAt, i.Priority, i.Urgency, i.Status, i.ServiceName})
+			block = append(block, []string{i.ID, i.Summary, i.CreatedAt, i.LastStatusChangeAt, i.Priority, i.Urgency, i.Status, i.AssignedName, i.ServiceName})
 		}
 	}
 	return block
 }
 
 func printIncidents(sr bool, keys []string, mxc int, dbt *dbtalker.DBTalker) {
-	headers := []string{"ID", "Summary", "CreatedAt", "LastStatusChangeAt", "Priority", "Urgency", "Status", "ServiceName"}
+	headers := []string{"ID", "Summary", "CreatedAt", "LastStatusChangeAt", "Priority", "Urgency", "Status", "AssignedName", "ServiceName"}
 	for _, k := range keys {
 		block := getPerServiceIncidents(sr, k, dbt)
 		if len(block) <= 0 {
