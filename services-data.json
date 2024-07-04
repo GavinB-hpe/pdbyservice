@@ -78,6 +78,8 @@
   "PZDC9BW": {"Name": "HPCaaS PROD manual escalation", "Location": "OnPrem", "Production": "true"},
   "P341KVM": {"Name": "GL ControlPlane OnPrem Services (Non-Production)", "Location": "OnPrem", "Production": "false"},
   "PZ3BT8R": {"Name": "neso-scim-proxy-services", "Location": "SaaS", "Production": "true"},
-  "PFVIIC8": {"Name": "PCEBuildvalidtion-SRE", "Location": "OnPrem", "Production": "false"}
+  "PFVIIC8": {"Name": "PCEBuildvalidtion-SRE", "Location": "OnPrem", "Production": "false"},
+  "P376KLT": {"Name": "PC Edge service", "Location": "OnPrem", "Production": "true"},
+  "PT5IGBF": {"Name": "awssecurityhub-fallthrough", "Location": "SaaS", "Production": "true"}
 
 }
