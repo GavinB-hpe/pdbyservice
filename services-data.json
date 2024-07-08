@@ -80,6 +80,7 @@
   "PZ3BT8R": {"Name": "neso-scim-proxy-services", "Location": "SaaS", "Production": "true"},
   "PFVIIC8": {"Name": "PCEBuildvalidtion-SRE", "Location": "OnPrem", "Production": "false"},
   "P376KLT": {"Name": "PC Edge service", "Location": "OnPrem", "Production": "true"},
-  "PT5IGBF": {"Name": "awssecurityhub-fallthrough", "Location": "SaaS", "Production": "true"}
+  "PT5IGBF": {"Name": "awssecurityhub-fallthrough", "Location": "SaaS", "Production": "true"},
+  "P9BCLNL": {"Name": "cluster_ccp_pce_prod-fallthrough", "Location": "SaaS", "Production": "true"}
 
 }
