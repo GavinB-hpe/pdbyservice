@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
 
 	"github.com/gavinB-hpe/pdbyservice/dbtalker"
 	"github.com/gavinB-hpe/pdbyservice/globals"
@@ -14,6 +15,8 @@ import (
 	"github.com/gavinB-hpe/pdbyservice/pdanalyser"
 	"github.com/gavinB-hpe/pdbyservice/utils"
 )
+
+type ArrayFlags []string
 
 // var for flags
 var dbtype string
@@ -28,6 +31,23 @@ var daysback int
 var showincidents bool
 var skipresolved bool
 var maxcolwidth int
+var servicefilters ArrayFlags
+
+func (i *ArrayFlags) String() string {
+	if *i == nil {
+		return ""
+	}
+	toto := ""
+	for _, s := range *i {
+		toto += s + " "
+	}
+	return strings.TrimSpace(toto)
+}
+
+func (i *ArrayFlags) Set(v string) error {
+	*i = append(*i, v)
+	return nil
+}
 
 func prettifiedOutput(sc map[string]int, sn map[string]string, keys []string) {
 	toto := make(map[string]int, 0)
@@ -128,6 +148,7 @@ func main() {
 	flag.BoolVar(&onpremonly, "O", false, "If set, only record data for services running OnPrem")
 	flag.BoolVar(&showincidents, "s", false, "If set, show the incident data")
 	flag.BoolVar(&skipresolved, "R", false, "If set, skip incidents that are resolved")
+	flag.Var(&servicefilters, "F", "Regex to filter services with. Can be specified multiple times.")
 	flag.Parse()
 
 	servicedata := readServiceData(servicedatafilename)
@@ -139,7 +160,7 @@ func main() {
 	}
 	dbtalker := dbtalker.NewDBTalker(model.ConnectDatabase(dbtype, dbdetails))
 	// get data
-	scounts, snames, sortedkeys := pdanalyser.PDanalyse(productionOnly, saasonly, onpremonly, daysback, skipresolved, servicedata, dbtalker)
+	scounts, snames, sortedkeys := pdanalyser.PDanalyse(servicefilters, productionOnly, saasonly, onpremonly, daysback, skipresolved, servicedata, dbtalker)
 	// output
 	prettifiedOutput(scounts, snames, sortedkeys)
 	unknown := checkSeenServices(snames, servicedata)

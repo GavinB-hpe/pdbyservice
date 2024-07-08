@@ -60,13 +60,33 @@ func statusOK(sr bool, i model.PDInfoType) bool {
 	return true
 }
 
-func PDanalyse(po bool, so bool, onp bool, days int, skipr bool, sd *map[string]map[string]string, dbt *dbtalker.DBTalker) (map[string]int, map[string]string, []string) {
+func matchFilter(sf []string, pdi model.PDInfoType) bool {
+	if len(sf) == 0 {
+		return true
+	}
+	for _, s := range sf {
+		if s == pdi.ServiceID {
+			return true
+		}
+	}
+	return false
+}
+
+func PDanalyse(
+	sf []string,
+	po bool,
+	so bool,
+	onp bool,
+	days int,
+	skipr bool,
+	sd *map[string]map[string]string,
+	dbt *dbtalker.DBTalker) (map[string]int, map[string]string, []string) {
 	urgency := globals.DEFAULTURGENCYVALUES
 	status := globals.DEFAULTSTATUSVALUES
 	scount := make(map[string]int, 0)
 	snames := make(map[string]string, 0)
 	for _, pdi := range dbt.GetIncidents(urgency, status) {
-		if dateOK(pdi, days) && statusOK(skipr, pdi) {
+		if dateOK(pdi, days) && statusOK(skipr, pdi) && matchFilter(sf, pdi) {
 			dt := (*sd)[pdi.ServiceID]
 			if yesok(po, so, onp, dt) {
 				scount[pdi.ServiceID] += 1
