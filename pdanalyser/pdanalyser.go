@@ -2,6 +2,7 @@ package pdanalyser
 
 import (
 	"log"
+	"regexp"
 	"sort"
 	"time"
 
@@ -65,7 +66,7 @@ func matchFilter(sf []string, pdi model.PDInfoType) bool {
 		return true
 	}
 	for _, s := range sf {
-		if s == pdi.ServiceID {
+		if m, err := regexp.MatchString(s, pdi.ServiceID); err == nil && m {
 			return true
 		}
 	}
