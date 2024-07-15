@@ -21,7 +21,6 @@ type ArrayFlags []string
 // var for flags
 var dbtype string
 var dbdetails string
-var bucketsize int
 var unknownservicelistfilename string
 var servicedatafilename string
 var productionOnly bool
@@ -138,7 +137,6 @@ func printIncidents(sr bool, keys []string, mxc int, dbt *dbtalker.DBTalker) {
 func main() {
 	flag.StringVar(&dbtype, "t", globals.DEFAULTDBTYPE, "Type of DB used e.g. sqlite3")
 	flag.StringVar(&dbdetails, "db", globals.DEFAULTDBDETAILS, "Filename for sqlite3 or URI of DB")
-	flag.IntVar(&bucketsize, "b", globals.DEFAULTBUCKETSIZE, "How many days to bucket together in the graph. ")
 	flag.IntVar(&daysback, "D", 30, "How many days back to search. Cannot go further back than the data in the DB of course.")
 	flag.IntVar(&maxcolwidth, "w", globals.MAXCOLWIDTH, "Max width of column in characters")
 	flag.StringVar(&unknownservicelistfilename, "o", globals.DEFAULTUNKNOWNSERVICELIST, "File used to store list of unknown services seen")
@@ -152,9 +150,6 @@ func main() {
 	flag.Parse()
 
 	servicedata := readServiceData(servicedatafilename)
-	if bucketsize <= 0 {
-		log.Fatalln("Invalid bucketsize value. Must be > 0")
-	}
 	if dbdetails == "" {
 		log.Fatalln("dbdetails cannot be empty")
 	}
