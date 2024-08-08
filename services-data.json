@@ -85,7 +85,7 @@
   "P698IX9": {"Name": "Pluto-External-URL-Monitoring-SC", "Location": "SaaS", "Production": "true"},
   "P21YJTO": {"Name": "oberon-vas", "Location": "SaaS", "Production": "false"},
   "P8WQHER": {"Name": "nesologz-gateway", "Location": "SaaS", "Production": "true"},
-  "PNH93QR": {"Name": "Spectrum Scale integration support", "Location": "SaaS", "Production": "true"},
+  "PNH93QR": {"Name": "Spectrum Scale integration support", "Location": "OnPrem", "Production": "true"},
   "PXYFPHV": {"Name": "oberonlogz-mlops", "Location": "SaaS", "Production": "false"},
   "PRD6AWJ": {"Name": "oberonlogz-quake", "Location": "SaaS", "Production": "false"},
   "P32GG26": {"Name": "cluster_ccp_gitops-fallthrough", "Location": "SaaS", "Production": "true"},
