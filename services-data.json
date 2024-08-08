@@ -52,7 +52,7 @@
   "PTDDYQN": {"Name": "logz-io-config", "Location": "SaaS", "Production": "true"},
   "PUCOOO2": {"Name": "aidan-test", "Location": "SaaS", "Production": "false"},
   "PUNBF7Z": {"Name": "neso-calico-system", "Location": "SaaS", "Production": "true"},
-  "PWQNUUM": {"Name": "k8s-cloud_backup_and_recovery_cvsa_manager", "Location": "SaaS", "Production": "true"},
+  "PWQNUUM": {"Name": "k8s-cloud_backup_and_recovery_cvsa_manager (DECOMMISSIONED)", "Location": "SaaS", "Production": "true"},
   "PX8IEWL": {"Name": "oberon-platform-alerts", "Location": "SaaS", "Production": "false"},
   "PXA7WIF": {"Name": "Test Sechub to Pagerduty", "Location": "SaaS", "Production": "false"},
   "PXU9Y4M": {"Name": "Vimaan-Connectivity-Service", "Location": "OnPrem", "Production": "true"},
