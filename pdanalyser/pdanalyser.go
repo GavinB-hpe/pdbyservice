@@ -73,6 +73,21 @@ func matchFilter(sf []string, pdi model.PDInfoType) bool {
 	return false
 }
 
+// PDanalyse is a function that performs analysis on incidents based on various parameters.
+// It takes in the following parameters:
+// - sf []string: a slice of strings representing filter criteria
+// - po bool: a boolean indicating whether to include incidents with Priority Outage status
+// - so bool: a boolean indicating whether to include incidents with Service Outage status
+// - onp bool: a boolean indicating whether to include incidents with On-Call No Pager status
+// - days int: an integer representing the number of days to consider for analysis
+// - skipr bool: a boolean indicating whether to skip incidents with Resolved status
+// - sd *map[string]map[string]string: a pointer to a map containing service details
+// - dbt *dbtalker.DBTalker: a pointer to a DBTalker object for interacting with the database
+//
+// It returns the following:
+// - map[string]int: a map with service IDs as keys and the count of incidents as values
+// - map[string]string: a map with service IDs as keys and the corresponding service names as values
+// - []string: a slice of strings representing the service IDs in descending order of incident count
 func PDanalyse(
 	sf []string,
 	po bool,
