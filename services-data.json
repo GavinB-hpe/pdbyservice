@@ -89,6 +89,14 @@
   "PXYFPHV": {"Name": "oberonlogz-mlops", "Location": "SaaS", "Production": "false"},
   "PRD6AWJ": {"Name": "oberonlogz-quake", "Location": "SaaS", "Production": "false"},
   "P32GG26": {"Name": "cluster_ccp_gitops-fallthrough", "Location": "SaaS", "Production": "true"},
-  "PLVFNRW": {"Name": "glc2glcp_bridge_cloudwatch_prod", "Location": "SaaS", "Production": "true"}
+  "PLVFNRW": {"Name": "glc2glcp_bridge_cloudwatch_prod", "Location": "SaaS", "Production": "true"},
+  "PVT0TLN": {"Name": "aws-agena-production", "Location": "SaaS", "Production": "true"},
+  "PJG3CSP": {"Name": "deadmansnitch-oberon", "Location": "OnPrem", "Production": "false"},
+  "PQGGBJH": {"Name": "DSCC Incident Response", "Location": "SaaS", "Production": "true"},
+  "PJH2LXW": {"Name": "neso-hpcaas", "Location": "SaaS", "Production": "true"},
+  "PSBL36E": {"Name": "gl-hpcaas-services", "Location": "SaaS", "Production": "true"},
+  "PHKD51Z": {"Name": "nesologz-fallthrough", "Location": "SaaS", "Production": "true"},
+  "PN8JS0O": {"Name": "SLX-Monitor", "Location": "SaaS", "Production": "true"},
+  "PBCRL19": {"Name": "PC AI Monitoring", "Location": "SaaS", "Production": "true"}
 
 }
